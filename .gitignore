@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env
+venv/
+.venv/
+ENV/
+*.egg-info/
+*.egg
+
+# VS Code
+.vscode/
+
+# Mac/Windows
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# HTML build/cache
+*.cache
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Node
+node_modules/
+
+# Misc
+*.bak
+*.swp
+*.tmp
+
+# Ignore viewer requirements
+viewer_requirements.txt
+
+# Ignore test html
+*.html
+!Pytorch-proces.html
+
+# Ignore storage
+storage/

@@ -1,0 +1,126 @@
+/* Roligt og afdæmpet mørkt look til hele sitet */
+body {
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  background: #232926;
+  color: #e6ede8;
+  font-size: 1rem;
+}
+
+.card {
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
+  border: none;
+  background: #27302b;
+  color: #e6ede8;
+}
+
+.card-body {
+  color: #e6ede8;
+  font-weight: 400;
+}
+
+h1, h2, h5 {
+  font-weight: 600;
+  color: #e6ede8;
+}
+
+label, .form-label {
+  color: #e6ede8;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: #b7c9b7;
+  color: #232926;
+  border: none;
+  font-weight: 500;
+}
+.btn-primary:hover {
+  background: #a3bfa3;
+  color: #232926;
+}
+.btn-outline-secondary {
+  border-radius: 2rem;
+  color: #b7c9b7;
+  border-color: #b7c9b7;
+  font-weight: 500;
+  background: transparent;
+}
+.btn-outline-secondary:hover {
+  background: #3a4a3f;
+  color: #e6ede8;
+}
+
+.navbar {
+  background: #232926;
+  border-bottom: 1px solid #3a4a3f;
+}
+.navbar .navbar-brand, .navbar .nav-link {
+  color: #b7c9b7;
+  font-weight: 600;
+}
+
+.form-control, .form-select {
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: #232926;
+  color: #e6ede8;
+  border: 1px solid #b7c9b7;
+}
+.form-control:focus, .form-select:focus {
+  border-color: #b7c9b7;
+  box-shadow: 0 0 0 0.1rem rgba(183,201,183,0.10);
+}
+
+.alert-info {
+  background: #2e3531;
+  color: #b7c9b7;
+  border: none;
+  border-radius: 1rem;
+}
+
+.rating-badge {
+  display: inline-block;
+  border-radius: 1rem;
+  padding: 0.2em 1em;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-left: 0.5em;
+  background: #b7c9b7;
+  color: #232926;
+  transition: background 0.2s, color 0.2s;
+}
+.rating-5 { background: #b7c9b7; color: #232926; }
+.rating-4 { background: #6b7c6b; color: #e6ede8; }
+.rating-3 { background: #3a4a3f; color: #e6ede8; }
+.rating-2 { background: #5c4033; color: #e6ede8; }
+.rating-1 { background: #2e3531; color: #b7c9b7; }
+.rating-0, .rating-badge:not([class*='rating-']) { background: #2e3531; color: #b7c9b7; }
+
+/* Responsive styles */
+@media (max-width: 600px) {
+  h1, h2, h5 {
+    font-size: 1.1rem;
+  }
+  .card {
+    padding: 0.5rem;
+  }
+  .rating-badge {
+    font-size: 0.9rem;
+    padding: 0.15em 0.7em;
+    margin-left: 0.3em;
+  }
+}
+@media (max-width: 900px) {
+  .card {
+    padding: 0.75rem;
+  }
+  .form-group, .form-label, .form-control, .form-select, .btn {
+    margin-bottom: 1rem;
+  }
+}
+/* Add spacing between form fields for desktop as well */
+.form-group, .form-label, .form-control, .form-select, .btn {
+  margin-bottom: 1rem;
+}
+

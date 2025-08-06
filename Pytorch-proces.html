@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="da" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyTorch Trænings-Workflow: En Visuel Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+        .flow-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .arrow {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin: 1rem 0;
+            align-self: center;
+        }
+         .step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 9999px;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+        .card {
+            background-color: #1F2937;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center my-12">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#9B5DE5] to-[#F15BB5]">PyTorch Trænings-Workflow</h1>
+            <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">En visuel guide til at huske de 6 essentielle trin i træningen af en AI-model, fra rå data til færdig prædiktion.</p>
+        </header>
+
+        <main class="space-y-16">
+
+            <section id="step1" class="card">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <div class="step-badge" style="background-color: #00F5D4;">1</div>
+                        <h2 class="text-3xl font-bold mb-4" style="color: #00F5D4;">Forbered Data: Datapipelinen</h2>
+                        <p class="mb-4">Fundamentet for enhver model er data. I PyTorch skaber vi en robust pipeline med `Dataset` og `DataLoader`. `Dataset` henter individuelle datapunkter, mens `DataLoader` effektivt organiserer dem i batches, blander dem for at undgå bias og forbereder dem til træning.</p>
+                        <div class="space-y-3 text-sm">
+                            <p><strong style="color: #00CCBF;">Batch Størrelse:</strong> Grupperer data for effektiv GPU-udnyttelse.</p>
+                            <p><strong style="color: #00CCBF;">Shuffle:</strong> Blander data i hver epoke for at forbedre generalisering.</p>
+                            <p><strong style="color: #00CCBF;">Transformationer:</strong> Normaliserer og forbedrer data (f.eks. `ToTensor`, `Normalize`).</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center space-y-4">
+                         <div class="flow-step w-full" style="border-color: #00F5D4;">
+                            <span class="text-4xl">🗂️</span>
+                            <h3 class="font-bold mt-2">Rå Data</h3>
+                            <p class="text-xs text-gray-400">(Billeder, Tekst, CSV)</p>
+                        </div>
+                        <div class="arrow" style="color: #00F5D4;">↓</div>
+                        <div class="flow-step w-full" style="border-color: #00F5D4;">
+                             <span class="text-4xl">⚙️</span>
+                            <h3 class="font-bold mt-2">Dataset & DataLoader</h3>
+                             <p class="text-xs text-gray-400">(Struktur & Batching)</p>
+                        </div>
+                         <div class="arrow" style="color: #00F5D4;">↓</div>
+                        <div class="flow-step w-full" style="border-color: #00F5D4;">
+                             <span class="text-4xl">📦</span>
+                            <h3 class="font-bold mt-2">Batches af Tensorer</h3>
+                             <p class="text-xs text-gray-400">(Klar til modellen)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="step2" class="card">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                     <div class="flex items-center justify-center">
+                        <div class="space-y-4 p-4 rounded-lg w-full max-w-sm">
+                            <div class="text-center font-bold" style="color: #9B5DE5;">Input Lag</div>
+                            <div class="arrow" style="color: #9B5DE5; margin: 0.5rem 0;">↓</div>
+                            <div class="p-4 rounded-lg text-center" style="background-color: rgba(155, 93, 229, 0.2);">
+                                <div class="font-bold">Skjult Lag 1</div>
+                                <div class="text-xs text-gray-400">f.eks. `nn.Linear` + `nn.ReLU`</div>
+                            </div>
+                            <div class="arrow" style="color: #9B5DE5; margin: 0.5rem 0;">↓</div>
+                            <div class="p-4 rounded-lg text-center" style="background-color: rgba(155, 93, 229, 0.2);">
+                                <div class="font-bold">Skjult Lag 2</div>
+                                <div class="text-xs text-gray-400">f.eks. `nn.Linear` + `nn.ReLU`</div>
+                            </div>
+                            <div class="arrow" style="color: #9B5DE5; margin: 0.5rem 0;">↓</div>
+                            <div class="text-center font-bold" style="color: #9B5DE5;">Output Lag</div>
+                        </div>
+                    </div>
+                    <div class="md:order-first">
+                        <div class="step-badge" style="background-color: #9B5DE5;">2</div>
+                        <h2 class="text-3xl font-bold mb-4" style="color: #9B5DE5;">Definer Modellen: Arkitekturen</h2>
+                        <p class="mb-4">Modellen er hjernen i operationen. I PyTorch definerer vi arkitekturen ved at nedarve fra `nn.Module`. Vi specificerer lagene i `__init__` metoden og definerer, hvordan data flyder igennem dem i `forward` metoden. Dette modulære design gør det let at bygge alt fra simple lineære modeller til komplekse neurale netværk.</p>
+                         <div class="space-y-3 text-sm">
+                            <p><strong style="color: #9B5DE5;">`nn.Linear`</strong>: Et fuldt forbundet lag, kernen i mange netværk.</p>
+                            <p><strong style="color: #9B5DE5;">`nn.Conv2d`</strong>: Et konvolutionelt lag, essentielt for billedgenkendelse.</p>
+                            <p><strong style="color: #9B5DE5;">`nn.ReLU`</strong>: En aktiveringsfunktion der introducerer ikke-linearitet.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="step3" class="card">
+                <div class="text-center mb-8">
+                    <div class="step-badge mx-auto" style="background-color: #F15BB5;">3</div>
+                    <h2 class="text-3xl font-bold" style="color: #F15BB5;">Vælg Værktøjer: Tab & Optimering</h2>
+                    <p class="text-gray-400 max-w-2xl mx-auto mt-2">For at træne modellen har vi brug for to ting: en måde at måle fejl på (tabfunktion) og en metode til at minimere denne fejl (optimeringsalgoritme).</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div>
+                        <h3 class="text-xl font-bold text-center mb-4">Tabfunktioner: Hvor forkert er modellen?</h3>
+                        <p class="text-center text-sm text-gray-400 mb-4">Valget afhænger af opgaven. Regression bruger typisk MSE, mens klassifikation bruger Cross-Entropy.</p>
+                        <div class="chart-container">
+                            <canvas id="lossChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-center mb-4">Optimering: Hvordan bliver den klogere?</h3>
+                         <p class="text-center text-sm text-gray-400 mb-4">Optimeringsalgoritmen justerer modellens vægte for at reducere tabet. Adam er ofte et robust standardvalg.</p>
+                        <div class="chart-container">
+                            <canvas id="optimizerChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="step4" class="card">
+                 <div class="text-center mb-8">
+                     <div class="step-badge mx-auto" style="background-color: #FEE440;">4</div>
+                    <h2 class="text-3xl font-bold" style="color: #FEE440;">Træningsloop: Hjertet af Processen</h2>
+                    <p class="text-gray-400 max-w-2xl mx-auto mt-2">Dette er den iterative proces, hvor modellen lærer. For hver batch af data i en epoke gennemgår vi en cyklus for at finjustere modellens vægte.</p>
+                </div>
+                <div class="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
+                    <div class="flow-step" style="border-color: #FEE440;">
+                        <h3 class="font-bold">1. Forward Pass</h3>
+                        <p class="text-sm text-gray-400 mt-1">Modellen laver en forudsigelse.</p>
+                        <code>outputs = model(inputs)</code>
+                    </div>
+                    <div class="arrow hidden md:block" style="color: #FEE440;">→</div>
+                    <div class="arrow block md:hidden" style="color: #FEE440;">↓</div>
+                     <div class="flow-step" style="border-color: #FEE440;">
+                        <h3 class="font-bold">2. Beregn Tab</h3>
+                        <p class="text-sm text-gray-400 mt-1">Sammenlign forudsigelse med sandhed.</p>
+                        <code>loss = criterion(outputs, labels)</code>
+                    </div>
+                    <div class="arrow hidden md:block" style="color: #FEE440;">→</div>
+                     <div class="arrow block md:hidden" style="color: #FEE440;">↓</div>
+                     <div class="flow-step col-span-1 md:col-span-3 lg:col-span-1 mt-4 lg:mt-0" style="border-color: #FEE440;">
+                        <h3 class="font-bold">3. Nulstil Gradienter</h3>
+                        <p class="text-sm text-gray-400 mt-1">Ryd op fra sidste iteration.</p>
+                        <code>optimizer.zero_grad()</code>
+                    </div>
+                    <div class="w-full col-span-1 md:col-span-3 lg:col-span-5 my-4 flex justify-center">
+                        <div class="arrow block lg:hidden" style="color: #FEE440;">↓</div>
+                        <div class="arrow hidden lg:block" style="writing-mode: vertical-rl; transform: rotate(180deg); color: #FEE440; margin: 0 1rem;">→</div>
+                    </div>
+                    <div class="flow-step md:col-start-1 lg:col-start-3" style="border-color: #FEE440;">
+                        <h3 class="font-bold">4. Backward Pass</h3>
+                        <p class="text-sm text-gray-400 mt-1">Beregn gradienter (fejlens retning).</p>
+                        <code>loss.backward()</code>
+                    </div>
+                     <div class="arrow hidden md:block" style="color: #FEE440;">→</div>
+                     <div class="arrow block md:hidden" style="color: #FEE440;">↓</div>
+                    <div class="flow-step" style="border-color: #FEE440;">
+                        <h3 class="font-bold">5. Opdater Vægte</h3>
+                        <p class="text-sm text-gray-400 mt-1">Tag et skridt i den rigtige retning.</p>
+                        <code>optimizer.step()</code>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="step5" class="card">
+                 <div class="grid md:grid-cols-2 gap-8 items-center">
+                     <div>
+                        <div class="step-badge" style="background-color: #00BBF9;">5</div>
+                        <h2 class="text-3xl font-bold mb-4" style="color: #00BBF9;">Evaluer Præstation: Kvalitetskontrol</h2>
+                        <p class="mb-4">Efter træning skal vi objektivt vurdere, hvor godt modellen klarer sig på usete data. Vi bruger et separat test- eller valideringssæt. Det er afgørende at skifte til evalueringstilstand med `model.eval()` for at sikre konsistente resultater og deaktivere gradientberegning med `torch.no_grad()` for at spare hukommelse og beregningstid.</p>
+                         <div class="space-y-3 text-sm">
+                            <p><strong style="color: #00A5E0;">Nøjagtighed:</strong> Hvor ofte rammer modellen rigtigt?</p>
+                            <p><strong style="color: #00A5E0;">Præcision & Recall:</strong> Hvor præcise er de positive forudsigelser, og hvor mange af de sande positive blev fundet?</p>
+                            <p><strong style="color: #00A5E0;">F1-Score:</strong> Et balanceret mål, især nyttigt for ubalancerede datasæt.</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="evalChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="step6" class="card">
+                <div class="text-center mb-8">
+                    <div class="step-badge mx-auto" style="background-color: #00F5D4;">6</div>
+                    <h2 class="text-3xl font-bold" style="color: #00F5D4;">Gem & Indlæs: Gør Modellen Genanvendelig</h2>
+                     <p class="text-gray-400 max-w-2xl mx-auto mt-2">At gemme en trænet model gør det muligt at genbruge den til forudsigelser (inferens) eller genoptage træningen senere.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="p-6 rounded-lg border-2" style="border-color: #00CCBF;">
+                        <h3 class="text-xl font-bold mb-2">Kun Vægte (`state_dict`)</h3>
+                        <p class="text-sm text-gray-400 mb-4">Den anbefalede metode til implementering. Gemmer kun modellens lærte parametre. Det er fleksibelt og pladseffektivt.</p>
+                        <code class="block bg-gray-800 p-2 rounded text-xs">torch.save(model.state_dict(), 'model.pth')</code>
+                        <code class="block bg-gray-800 p-2 rounded text-xs mt-2">model.load_state_dict(torch.load('model.pth'))</code>
+                    </div>
+                     <div class="p-6 rounded-lg border-2" style="border-color: #00CCBF;">
+                        <h3 class="text-xl font-bold mb-2">Fuldt Checkpoint</h3>
+                        <p class="text-sm text-gray-400 mb-4">Ideelt til at genoptage træning. Gemmer modelvægte, optimeringstilstand, epoke og tab, så du kan fortsætte præcis, hvor du slap.</p>
+                        <code class="block bg-gray-800 p-2 rounded text-xs">torch.save({ 'epoch': e, 'model_state_dict': model.state_dict(), 'optimizer_state_dict': optimizer.state_dict(), 'loss': loss,...}, 'ckpt.tar')</code>
+                    </div>
+                </div>
+                 <p class="text-center mt-6 text-yellow-400 font-bold">Husk altid at kalde `model.eval()` efter indlæsning til inferens!</p>
+            </section>
+        </main>
+
+        <footer class="text-center mt-16 py-8 border-t border-gray-700">
+            <p class="text-gray-500">Infografik skabt med Tailwind CSS & Chart.js. Baseret på PyTorch træningsprincipper.</p>
+        </footer>
+    </div>
+
+<script>
+    function wrapText(str) {
+        const words = str.split(' ');
+        let currentLine = '';
+        const lines = [];
+        const maxLength = 16;
+
+        for (const word of words) {
+            if ((currentLine + ' ' + word).trim().length > maxLength && currentLine.length > 0) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = (currentLine + ' ' + word).trim();
+            }
+        }
+        if (currentLine.length > 0) {
+            lines.push(currentLine);
+        }
+        return lines.length > 1 ? lines : str;
+    }
+    
+    const tooltipTitleCallback = {
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        } else {
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const colors = {
+        purple: '#9B5DE5',
+        pink: '#F15BB5',
+        yellow: '#FEE440',
+        cyan: '#00F5D4',
+        blue: '#00BBF9',
+        darkBlue: '#00A5E0',
+        lightCyan: '#00CCBF'
+    };
+    
+    Chart.defaults.color = 'rgba(229, 231, 235, 0.8)';
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+
+    const lossCtx = document.getElementById('lossChart').getContext('2d');
+    new Chart(lossCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Klassifikation (f.eks. CrossEntropy)', 'Regression (f.eks. MSE)'],
+            datasets: [{
+                label: 'Anvendelse af Tabfunktioner',
+                data: [75, 25],
+                backgroundColor: [colors.pink, colors.purple],
+                borderColor: '#1F2937',
+                borderWidth: 4,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: tooltipTitleCallback.plugins.tooltip
+            }
+        }
+    });
+
+    const optimizerCtx = document.getElementById('optimizerChart').getContext('2d');
+    new Chart(optimizerCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Adam', ['Stochastic', 'Gradient Descent (SGD)']],
+            datasets: [{
+                label: 'Anbefaling/Popularitet',
+                data: [90, 65],
+                backgroundColor: [colors.pink, colors.purple],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 100,
+                     grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                 y: {
+                     grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                 tooltip: tooltipTitleCallback.plugins.tooltip
+            }
+        }
+    });
+    
+    const evalCtx = document.getElementById('evalChart').getContext('2d');
+    new Chart(evalCtx, {
+        type: 'radar',
+        data: {
+            labels: ['Nøjagtighed', 'Præcision', 'Recall', 'F1-Score', 'AUROC'],
+            datasets: [{
+                label: 'Model Præstation',
+                data: [92, 85, 88, 86, 95],
+                backgroundColor: 'rgba(0, 187, 249, 0.2)',
+                borderColor: colors.blue,
+                pointBackgroundColor: colors.blue,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: colors.blue,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    pointLabels: {
+                        font: {
+                            size: 12
+                        },
+                        color: 'rgba(229, 231, 235, 0.8)'
+                    },
+                    ticks: {
+                        backdropColor: '#1F2937',
+                        color: 'rgba(229, 231, 235, 0.6)'
+                    },
+                    min: 0,
+                    max: 100
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: tooltipTitleCallback.plugins.tooltip
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
